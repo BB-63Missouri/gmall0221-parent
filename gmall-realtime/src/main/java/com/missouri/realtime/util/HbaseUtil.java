@@ -32,6 +32,19 @@ import java.sql.SQLException;
 //用到hbase和phoenix,hbase:start-hbase.sh和stop-hbase.sh命令开启hbase;
 // phoenix:sqlline.py hadoop163,hadoop164,hadoop162:2181 后面接zk地址
 //维度表不常变，如果此前消费过数据，需要maxwell执行重新查询
+    /*
+bin/maxwell-bootstrap --user maxwell  --password aaaaaa --host hadoop162  --database gmall2021 --table user_info --client_id maxwell_1
+
+bin/maxwell-bootstrap --user maxwell  --password aaaaaa --host hadoop162  --database gmall2021 --table base_province --client_id maxwell_1
+
+bin/maxwell-bootstrap --user maxwell  --password aaaaaa --host hadoop162  --database gmall2021 --table sku_info --client_id maxwell_1
+
+bin/maxwell-bootstrap --user maxwell  --password aaaaaa --host hadoop162  --database gmall2021 --table spu_info --client_id maxwell_1
+
+bin/maxwell-bootstrap --user maxwell  --password aaaaaa --host hadoop162  --database gmall2021 --table base_category3 --client_id maxwell_1
+
+bin/maxwell-bootstrap --user maxwell  --password aaaaaa --host hadoop162  --database gmall2021 --table base_trademark --client_id maxwell_1
+     */
 public class HbaseUtil {
     public static SinkFunction<Tuple2<JSONObject, TableProcess>> getPhoenixSink(){
         return new PhoenixSink();

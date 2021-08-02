@@ -108,8 +108,8 @@ public class DWDDbApp extends BaseApp {
                 jsonObject.keySet().removeIf(key -> !columns.contains(key));
             }
         });
-        DataStream<Tuple2<JSONObject, TableProcess>> hbaseStram = kafkaStream.getSideOutput(hbaseTag);
-        return Tuple2.of(kafkaStream,hbaseStram);
+        DataStream<Tuple2<JSONObject, TableProcess>> hbaseStream = kafkaStream.getSideOutput(hbaseTag);
+        return Tuple2.of(kafkaStream,hbaseStream);
     }
 
     //两个流连接，做好分流准备

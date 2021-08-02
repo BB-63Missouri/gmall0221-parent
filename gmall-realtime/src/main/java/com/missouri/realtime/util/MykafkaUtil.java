@@ -56,7 +56,7 @@ public class MykafkaUtil {
         conf.setProperty("bootstrap.servers","hadoop162:9092,hadoop163:9092,hadoop164:9092");
         conf.setProperty("transaction.timeout.ms", 15 * 60 * 1000+ "");
         return new FlinkKafkaProducer<Tuple2<JSONObject, TableProcess>>(
-            "defult",
+            "default",
                  new KafkaSerializationSchema<Tuple2<JSONObject, TableProcess>>() {
                     @Override
                     public ProducerRecord<byte[], byte[]> serialize(Tuple2<JSONObject, TableProcess> element, @Nullable Long timestamp) {
