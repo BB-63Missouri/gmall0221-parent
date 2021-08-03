@@ -8,11 +8,13 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import org.apache.flink.streaming.api.functions.sink.SinkFunction;
+import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Map;
 
 /**
  * @author Missouri
@@ -52,6 +54,7 @@ public class HbaseUtil {
     public static class PhoenixSink extends RichSinkFunction<Tuple2<JSONObject, TableProcess>>{
         private Connection conn;
         private ValueState<String> tableCreateState;
+        private Jedis client;
         //
         @Override
         public void open(Configuration parameters) throws Exception {
@@ -60,7 +63,7 @@ public class HbaseUtil {
             //初始化状态
             tableCreateState = getRuntimeContext().getState(new ValueStateDescriptor<String>("tableCreateState", String.class));
 
-
+            client = RedisUtil.getRedisClient();
         }
         //标准的jdbc来完成
         @Override
@@ -69,6 +72,27 @@ public class HbaseUtil {
             checkTable(value);
             //把数据写入phoenix中,sql插入
             writeToPhoenix(value);
+            //更新redis(读取维度数据的优化，旁路缓存)
+            //粗暴：可以直接删除缓存,让直接去hbase查
+            //更新数据，不新增，但是不能加热点数据，热点数据怎么开始在
+            updateCache(value);
+        }
+
+        private void updateCache(Tuple2<JSONObject, TableProcess> value) {
+            JSONObject data = new JSONObject();
+            //将里面的key全部变成大写，hbase里的表名全是大写 ,将数据存入data容器
+            for (Map.Entry<String,Object> entry : value.f0.entrySet()){
+                data.put(entry.getKey().toUpperCase(),entry.getValue());
+            }
+
+            //更新redis缓存,update,redis有维度数据
+            String operateType = value.f1.getOperate_type();
+            String key = value.f1.getSink_table().toUpperCase();
+            //判断是否有数据
+            String dim = client.get(key);
+            if ("update".equals(operateType) && dim!= null){
+                client.setex(key,24 * 60 * 60, data.toJSONString());
+            }
         }
 
         private void writeToPhoenix(Tuple2<JSONObject, TableProcess> value) throws SQLException {
