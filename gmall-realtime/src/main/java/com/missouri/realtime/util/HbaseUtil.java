@@ -130,10 +130,10 @@ public class HbaseUtil {
             if(tableCreateState.value() == null){
                 //获取数据，补齐sql
                 TableProcess tp = value.f1;
-                StringBuilder creatSql = new StringBuilder();
+                StringBuilder createSql = new StringBuilder();
                 //拼接sql
                 //sql拼接和替换得注意，自己错了
-                creatSql
+                createSql
                         .append("create table if not exists ")
                         .append(tp.getSink_table())
                         .append("(")
@@ -144,8 +144,9 @@ public class HbaseUtil {
                         .append("))")
                         //分区
                         .append(tp.getSink_extend() == null ? "" : tp.getSink_extend());
+                System.out.println(createSql.toString());
                 //prepareStatement?
-                PreparedStatement ps = conn.prepareStatement(creatSql.toString());
+                PreparedStatement ps = conn.prepareStatement(createSql.toString());
                 ps.execute();
                 conn.commit();
                 ps.close();
