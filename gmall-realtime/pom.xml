@@ -152,6 +152,7 @@
                     <artifactId>javax.el</artifactId>
                 </exclusion>
             </exclusions>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -191,6 +192,7 @@
                                     <exclude>com.google.code.findbugs:jsr305</exclude>
                                     <exclude>org.slf4j:*</exclude>
                                     <exclude>log4j:*</exclude>
+                                    <exclude>org.apache.hadoop:*</exclude> <!--打包到liunx的时候排除的依赖-->
                                 </excludes>
                             </artifactSet>
                             <filters>

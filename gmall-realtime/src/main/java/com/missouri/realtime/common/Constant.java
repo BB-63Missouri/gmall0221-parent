@@ -17,6 +17,7 @@ public class Constant {
     public static final String TOPIC_DWM_USER_JUMP_DETAIL = "dwm_user_jump_detail";
     public static final String TOPIC_DWD_ORDER_INFO = "dwd_order_info";
     public static final String TOPIC_DWD_ORDER_DETAIL = "dwd_order_detail";
+    public static final String TOPIC_DWM_ORDER_WIDE = "dwm_order_wide";
 
    //表
     //订单宽表
@@ -35,4 +36,5 @@ public class Constant {
     //mysql
     public static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
     public static final String MYSQL_URL = "jdbc:mysql://hadoop162:3306/gmall2021?user=root&&password=aaaaaa";
+
 }
